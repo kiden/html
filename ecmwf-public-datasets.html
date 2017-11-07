@@ -1,0 +1,68 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(function(){ 
+
+    var table = $("#public-datasets");
+
+    var header, loading;
+
+    table.addClass("confluenceTable").addClass("tablesorter");
+    header = $("<tr>").addClass("sortableHeader").appendTo(table);
+    loading = $('<th class="confluenceTh sortableHeader" data-column="0">').appendTo(header);
+    loading.text("Loading table...");
+
+    $.ajax({url:"https://api.ecmwf.int/v1/datasets?key=public", dataType : 'jsonp', success : function(data) {
+
+        var th;
+
+        th = $('<th class="confluenceTh sortableHeader" data-column="2">').appendTo(header);
+        th.text("Description");
+
+        th = $('<th class="confluenceTh sortableHeader" data-column="1">').appendTo(header);
+        th.text("Licence");
+
+        $.each(data.datasets,function (i, d) {
+            if(d.description) {
+                var tr,td,a;
+                tr = $("<tr>").appendTo(table);
+                td = $('<td class="confluenceTd">').appendTo(tr);
+                td.text(d.name);
+
+                td = $('<td class="confluenceTd">').appendTo(tr);
+                td.text(d.description ? d.description : "N/A");
+
+                td = $('<td class="confluenceTd">').appendTo(tr);
+
+                if(d.licence) {
+                    a = $("<a>");
+                    a.appendTo(td);
+                    a.attr("href",d.licence.url);
+                    a.text(d.licence.name);
+                }
+                else
+            {
+                td.text("N/A");
+            }
+
+        }
+
+        });
+        
+        loading.text("Dataset");
+        
+    }, error: function() {
+
+        loading.text("Failed to load table");
+
+    }});
+});
+
+</script>
+</head>
+
+<body>
+<div id="public-datasets"></div>
+</body>
+</html>
