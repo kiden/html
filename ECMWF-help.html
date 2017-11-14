@@ -34,14 +34,13 @@
         var headerHtml = '<h1>' + parent.name + ' Help</h1>';
         headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
         headerHtml += '<p class="nav">| <a href="' + window.location.href + '">home</a> | print | search online documentation |<p>';
-        headerHtml += '<h2>Topics</h2>';
-        $('#helpHeader').append(headerHtml);
+        $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
 
-        var topicsHtml = '';
+        var topicsHtml = '<h2>Topics</h2>';
         $.each(data.results, function(key,child) { //console.log(child);
           topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
         });
-        $('#helpContent').append(topicsHtml);
+        $('#helpContent').empty().append(topicsHtml);  //only shows last if array; TODO: default to s/w/ space if no ID and remove each loop
       });     
     });
   });
@@ -69,6 +68,6 @@
 </head>
 <body>
   <div id="helpHeader"></div>
-  <div id="helpContent"></div>
+  <div id="helpTopics"></div>
 </body>
 </html>
