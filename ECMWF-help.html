@@ -22,12 +22,12 @@
   var api_url = url + 'rest/api/content/search?cql=parent=';
   
   var html = '';  //TODO: try the array method at some point
-  $.each(swdoc, function(parentId,record) { console.log(parentId); console.log(record);
+  $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
+    html += '<h1>' + parent.name + ' ' + (typeof preant.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
     $.getJSON(api_url + parentId, function(data) {
-      //console.log(data);
-      html += '<h1>' + record.name + ' ' + (typeof record.alt=='undefined' ? 'Documentation' : record.alt) + '</h1>';
-      $.each(data.results, function(key,result) {
-        html += '<h2><a href="' + url + data._links.webui + '">' + result.title + '</a></h2>'; //'<h3><a href="/wiki/' + result._links.webui + '">' + result.title + '</a></h3>';
+      console.log(data.results);
+      $.each(data.results, function(key,child) {
+        html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
       });
     });
     $('#output').empty().append(html);
