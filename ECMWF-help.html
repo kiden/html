@@ -22,10 +22,9 @@
     var url = 'https://software.ecmwf.int/wiki/';
     var api_url = url + 'rest/api/content/search?cql=parent=';
 
-    var html = '';  //TODO: try the array method at some point
     $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
       $.getJSON(api_url + parentId, function(data) {
-        html += '<h1>' + parent.name + ': ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
+        var html = '<h1>' + parent.name + ': ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
         //console.log(data);
         $.each(data.results, function(key,child) { //console.log(child);
           html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
