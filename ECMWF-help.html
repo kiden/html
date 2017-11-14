@@ -41,7 +41,7 @@
         $.each(data.results, function(key,child) { //console.log(child);
           topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
         });
-        $('#helpContents').append(topicsHtml);
+        $('#helpContent').append(topicsHtml);
       });     
     });
   });
@@ -69,6 +69,6 @@
 </head>
 <body>
   <div id="helpHeader"></div>
-  <div id="helpContents"></div>
+  <div id="helpContent"></div>
 </body>
 </html>
