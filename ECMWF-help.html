@@ -47,9 +47,15 @@
   
   function loadTopic(childId) {
     $.getJSON(api_url + '/' + childId + '?expand=body.view', function(data) {
-        var topicHtml = data.body.view.value;
-        topicHtml += 'Was this helpful? Yes | No';  //TODO
-        $('#helpContent').empty().append(topicHtml);
+      var topicHtml = data.body.view.value;
+      topicHtml += 'Was this helpful? Yes | No';  //TODO
+      $('#helpContent').empty().append(topicHtml);
+
+      //add event listener to any links
+      $('#helpContent a').click(function(event) {
+       alert("That'll break the box!");
+       event.preventDefault();
+      });
     });
   }
   
