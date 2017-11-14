@@ -2,6 +2,9 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+  var url = 'https://software.ecmwf.int/wiki';
+  var api_url = url + '/rest/api/content';
+  
   $(function() {
     /****************
     Page IDs of 'Documentation' page unless stated otherwise
@@ -17,21 +20,14 @@
     swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
     swdoc[14157950] = {'name':'Metview'};
     
-    console.log(swdoc);
-    
+    //filter the help file to the selected space, if applicable
     pageId = getParameterByName('pageId');
-    console.log(pageId);
-    
     var swdocSelected = {};
     if(typeof pageId != 'undefined' && typeof swdoc[pageId] != 'undefined') {
       swdocSelected[pageId] = swdoc[pageId];
     } else {
       swdocSelected = swdoc;
     }
-    console.log(swdocSelected);
-     
-    var url = 'https://software.ecmwf.int/wiki';
-    var api_url = url + '/rest/api/content';
 
     $.each(swdocSelected, function(parentId,parent) {
       $.getJSON(api_url + '/search?cql=parent=' + parentId, function(data) {
