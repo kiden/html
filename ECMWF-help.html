@@ -2,37 +2,38 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-  /****************
-  Page IDs of 'Documentation' page unless stated otherwise
-  *******************/
-  var swdoc = {};
-  swdoc[35753255] = {'name':'BUFRDC'};
-  swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
-  swdoc[45748339] = {'name':'ecCodes'};
-  swdoc[13207146] = {'name':'ecFlow'};
-  swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
-  swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
-  swdoc[7373225] = {'name':'GRIB-API'};
-  swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
-  swdoc[14157950] = {'name':'Metview'};
+  $(function() {
+    /****************
+    Page IDs of 'Documentation' page unless stated otherwise
+    *******************/
+    var swdoc = {};
+    swdoc[35753255] = {'name':'BUFRDC'};
+    swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
+    swdoc[45748339] = {'name':'ecCodes'};
+    swdoc[13207146] = {'name':'ecFlow'};
+    swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
+    swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
+    swdoc[7373225] = {'name':'GRIB-API'};
+    swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
+    swdoc[14157950] = {'name':'Metview'};
 
-  console.log(swdoc);
-  
-  var url = 'https://software.ecmwf.int/wiki/';
-  var api_url = url + 'rest/api/content/search?cql=parent=';
-  
-  var html = '';  //TODO: try the array method at some point
-  $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
-    html += '<h1>' + parent.name + ' ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
-    $.getJSON(api_url + parentId, function(data) {
-      console.log(data.results);
-      $.each(data.results, function(key,child) {
-        html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
+    console.log(swdoc);
+
+    var url = 'https://software.ecmwf.int/wiki/';
+    var api_url = url + 'rest/api/content/search?cql=parent=';
+
+    var html = '';  //TODO: try the array method at some point
+    $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
+      html += '<h1>' + parent.name + ' ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
+      $.getJSON(api_url + parentId, function(data) {
+        //console.log(data);
+        $.each(data.results, function(key,child) {
+          html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
+        });
       });
+      $('#output').empty().append(html);
     });
-    $('#output').empty().append(html);
   });
-  
 </script>
 </head>
 <body>
