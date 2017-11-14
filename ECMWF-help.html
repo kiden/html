@@ -17,18 +17,20 @@
     swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
     swdoc[14157950] = {'name':'Metview'};
 
-    //console.log(swdoc);
-
     var url = 'https://software.ecmwf.int/wiki/';
     var api_url = url + 'rest/api/content/search?cql=parent=';
 
-    $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
+    $.each(swdoc, function(parentId,parent) {
       $.getJSON(api_url + parentId, function(data) {
-        var html = '<h1>' + parent.name + ': ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
-        //console.log(data);
+        var html = '<h1>' + parent.name + ' Help</h1>';
+        html += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
+        html += '<p class="nav">back | fwd | home | print | search online documentation |<p>';
+        html += '<h2>Topics</h2>';
+
         $.each(data.results, function(key,child) { //console.log(child);
-          html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
-        }); //console.log(html);
+          html += '<p class="topic"><a href="' + url + child._links.webui + '">' + child.title + '</a></p>';
+        });
+        
         $('#output').append(html);
       });     
     });
