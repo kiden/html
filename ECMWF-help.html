@@ -63,9 +63,8 @@
         } else {
           if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
             window.open(this.pathname);
-          } else {
-            event.preventDefault();
           }
+          event.preventDefault();
         }
       });
     });
