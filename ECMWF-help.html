@@ -30,8 +30,8 @@
     }
     console.log(swdocSelected);
      
-    var url = 'https://software.ecmwf.int/wiki/';
-    var api_url = url + 'rest/api/content/search?cql=parent=';
+    var url = 'https://software.ecmwf.int/wiki';
+    var api_url = url + '/rest/api/content/search?cql=parent=';
 
     $.each(swdocSelected, function(parentId,parent) {
       $.getJSON(api_url + parentId, function(data) {
