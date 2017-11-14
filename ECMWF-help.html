@@ -24,7 +24,7 @@
       $.getJSON(api_url + parentId, function(data) {
         var html = '<h1>' + parent.name + ' Help</h1>';
         html += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-        html += '<p class="nav">back | fwd | home | print | search online documentation |<p>';
+        html += '<p class="nav">|back | fwd | home | print | search online documentation |<p>';
         html += '<h2>Topics</h2>';
 
         $.each(data.results, function(key,child) { //console.log(child);
@@ -36,6 +36,12 @@
     });
   });
 </script>
+<style>
+  h1 { margin-bottom: 0; }
+  .alt { margin-top: 0; }
+  .nav { color: lightgrey; }
+  .topic { margin-top: 8px; margin-bottom: 8px; }
+</style>
 </head>
 <body>
   <div id="output"></div>
