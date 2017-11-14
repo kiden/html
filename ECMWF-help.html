@@ -16,6 +16,10 @@
     swdoc[7373225] = {'name':'GRIB-API'};
     swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
     swdoc[14157950] = {'name':'Metview'};
+    console.log(getParameterByName('id'));
+    if(typeof getParameterByName('id')!='undefined') {
+      var swdoc = swdoc[id];
+    } console.log(swdoc);
 
     var url = 'https://software.ecmwf.int/wiki/';
     var api_url = url + 'rest/api/content/search?cql=parent=';
@@ -24,7 +28,7 @@
       $.getJSON(api_url + parentId, function(data) {
         var html = '<h1>' + parent.name + ' Help</h1>';
         html += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-        html += '<p class="nav">|back | fwd | home | print | search online documentation |<p>';
+        html += '<p class="nav">| <a href="javascript: window.back()">back</a> | <a href="javascript: window.forward()">fwd</a> | home | print | search online documentation |<p>';
         html += '<h2>Topics</h2>';
 
         $.each(data.results, function(key,child) { //console.log(child);
@@ -35,6 +39,16 @@
       });     
     });
   });
+  
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 </script>
 <style>
   h1 { margin-bottom: 0; }
