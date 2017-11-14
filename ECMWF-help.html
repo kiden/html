@@ -19,16 +19,17 @@
     
     console.log(swdoc);
     
-    id = getParameterByName('id');
-    console.log(id);
-    if(typeof id != 'undefined') {
-      var swdoc = swdoc[id];
-    } console.log(swdoc);
+    pageId = getParameterByName('pageId');
+    console.log(pageId);
+    
+    swdocSelected[pageId] = (typeof pageId == 'undefined' ? swdoc : (typeof swdoc[pageId] == 'undefined' ? swdoc[pageId] : ));
+    console.log(swdocSelected);
 
+                             
     var url = 'https://software.ecmwf.int/wiki/';
     var api_url = url + 'rest/api/content/search?cql=parent=';
 
-    $.each(swdoc, function(parentId,parent) {
+    $.each(swdocSelected, function(parentId,parent) {
       $.getJSON(api_url + parentId, function(data) {
         var html = '<h1>' + parent.name + ' Help</h1>';
         html += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
