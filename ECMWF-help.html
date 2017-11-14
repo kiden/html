@@ -16,8 +16,12 @@
     swdoc[7373225] = {'name':'GRIB-API'};
     swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
     swdoc[14157950] = {'name':'Metview'};
-    console.log(getParameterByName('id'));
-    if(typeof getParameterByName('id')!='undefined') {
+    
+    console.log(swdoc);
+    
+    id = getParameterByName('id');
+    console.log(id);
+    if(typeof id != 'undefined') {
       var swdoc = swdoc[id];
     } console.log(swdoc);
 
@@ -40,15 +44,11 @@
     });
   });
   
-  function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+  function getParameterByName(name) {
+      var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+  }
+
 </script>
 <style>
   h1 { margin-bottom: 0; }
