@@ -23,7 +23,7 @@
   
   var html = '';  //TODO: try the array method at some point
   $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
-    html += '<h1>' + parent.name + ' ' + (typeof preant.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
+    html += '<h1>' + parent.name + ' ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
     $.getJSON(api_url + parentId, function(data) {
       console.log(data.results);
       $.each(data.results, function(key,child) {
