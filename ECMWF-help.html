@@ -2,26 +2,41 @@
 <head>
 
 <script>
-/****************
-Page IDs of 'Documentation' page unless stated otherwise
-*******************/
-var swdoc = {};
-swdoc[35753255] = {'name':'BUFRDC'};
-swdoc[40804824] = {'name':'ECaccess','notes':'under User guide'};
-swdoc[45748339] = {'name':'ecCodes'};
-swdoc[13207146] = {'name':'ecFlow'};
-swdoc[41648799] = {'name':'ECMWF Web API','notes':'need to parse the content on this one....'};
-swdoc[22908294] = {'name':'EMOSLIB','notes':'no single Dcoumentation page to hook into'};
-swdoc[7373225] = {'name':'GRIB-API'};
-swdoc[14157858] = {'name':'Magics','notes':'under Using Magics'};
-swdoc[14157950] = {'name':'Metview'};
+  /****************
+  Page IDs of 'Documentation' page unless stated otherwise
+  *******************/
+  var swdoc = {};
+  swdoc[35753255] = {'name':'BUFRDC'};
+  swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
+  swdoc[45748339] = {'name':'ecCodes'};
+  swdoc[13207146] = {'name':'ecFlow'};
+  swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
+  swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
+  swdoc[7373225] = {'name':'GRIB-API'};
+  swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
+  swdoc[14157950] = {'name':'Metview'};
 
-console.log(swdoc);
-
+  console.log(swdoc);
+  
+  var url = 'https://software.ecmwf.int/wiki/';
+  var api_url = url + 'rest/api/content/search?cql=parent=';
+  
+  var html = '';  //TODO: try the array method at some point
+  $.each(swdoc, function(parentId,record) { console.log(parentId); console.log(record);
+    $.getJSON(api_url + parentId, function(data) {
+      //console.log(data);
+      html += '<h1>' + record.name + ' ' + (typeof record.alt=='undefined' ? 'Documentation' : record.alt) + '</h1>';
+      $.each(data.results, function(key,result) {
+        html += '<h2><a href="' + url + data._links.webui + '">' + result.title + '</a></h2>'; //'<h3><a href="/wiki/' + result._links.webui + '">' + result.title + '</a></h3>';
+        html += result.body.export_view.value;
+      });
+    });
+    $('#intra_wb').empty().append(html);
+  });
+  
 </script>
 </head>
 <body>
-
-
+  <div id="output"></div>
 </body>
 </html>
