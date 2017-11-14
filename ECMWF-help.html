@@ -49,7 +49,7 @@
     });
   });
   
-  function(childId) {
+  function loadTopic(childId) {
     $.getJSON(api_url + '/' + childId + '?expand=body.view', function(data) {
         var html = data.body.view.value;
                
