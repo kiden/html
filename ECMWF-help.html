@@ -53,7 +53,7 @@
 
       //add event listener to any links
       $('#helpContent a').click(function(event) {
-        if(isWikiLink(this.target)) {
+        if(isWikiLink(this.pathname)) {
           var arrUrl = [];
           arrUrl = this.target.split('/'); // /wiki/display/ECAC/Security+authentication
           console.log(arrUrl);
@@ -62,7 +62,7 @@
           });
         } else {
           if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
-            window.open(this.target);
+            window.open(this.pathname);
           } else {
             event.preventDefault();
           }
