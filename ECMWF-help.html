@@ -53,10 +53,26 @@
 
       //add event listener to any links
       $('#helpContent a').click(function(event) {
-       alert("That'll break the box!");
-       event.preventDefault();
+        if(isWikiLink(this.target)) {
+          var arrUrl = [];
+          arrUrl = this.target.split('/'); // /wiki/display/ECAC/Security+authentication
+          console.log(arrUrl);
+          $.getJSON(api_url + '?title' + arrUrl[2] + '&spaceKey=' arrUrl[3], function(data) {
+            loadTopic(data.results[0].id);
+          });
+        } else {
+          if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
+            window.open(this.target);
+          } else {
+            event.preventDefault();
+          }
+        }
       });
     });
+  }
+              
+  function isWikiLink(href) {
+    return (href.substring(0,13)=='/wiki/display' ? true : false );
   }
   
   function getParameterByName(name) {
