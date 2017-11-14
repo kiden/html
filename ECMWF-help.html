@@ -26,12 +26,12 @@
     $.each(swdoc, function(parentId,parent) { //console.log(parentId); console.log(record);
       html += '<h1>' + parent.name + ': ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + '</h1>';
       $.getJSON(api_url + parentId, function(data) {
-        console.log(data);
-        $.each(data.results, function(key,child) { console.log(child);
+        //console.log(data);
+        $.each(data.results, function(key,child) { //console.log(child);
           html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
-        });
+        }); console.log(html);
       });
-    });
+    }); console.log(html);
     $('#output').empty().append(html);
   });
 </script>
