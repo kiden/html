@@ -31,25 +31,26 @@
 
     $.each(swdocSelected, function(parentId,parent) {
       $.getJSON(api_url + '/search?cql=parent=' + parentId, function(data) {
-        var html = '<h1>' + parent.name + ' Help</h1>';
-        html += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-        html += '<p class="nav">| <a href="' + window.location.href + '">home</a> | print | search online documentation |<p>';
-        html += '<h2>Topics</h2>';
+        var headerHtml = '<h1>' + parent.name + ' Help</h1>';
+        headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
+        headerHtml += '<p class="nav">| <a href="' + window.location.href + '">home</a> | print | search online documentation |<p>';
+        headerHtml += '<h2>Topics</h2>';
+        $('#helpHeader').append(headerHtml);
 
+        var contentsHtml = '';
         $.each(data.results, function(key,child) { //console.log(child);
-          html += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+          contentsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
         });
-        
-        $('#output').append(html);
+        $('#helpContents').append(contentsHtml);
       });     
     });
   });
   
   function loadTopic(childId) {
     $.getJSON(api_url + '/' + childId + '?expand=body.view', function(data) {
-        var html = data.body.view.value;
+        var topicHtml = data.body.view.value;
                
-        $('#output').empty().append(html);
+        $('#output').empty().append(topicHtml);
     });
   }
   
@@ -67,6 +68,7 @@
 </style>
 </head>
 <body>
-  <div id="output"></div>
+  <div id="helpHeader"></div>
+  <div id="helpContents"></div>
 </body>
 </html>
