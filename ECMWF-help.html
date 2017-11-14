@@ -37,11 +37,11 @@
         headerHtml += '<h2>Topics</h2>';
         $('#helpHeader').append(headerHtml);
 
-        var contentsHtml = '';
+        var topicsHtml = '';
         $.each(data.results, function(key,child) { //console.log(child);
-          contentsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+          topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
         });
-        $('#helpContents').append(contentsHtml);
+        $('#helpContents').append(topicsHtml);
       });     
     });
   });
@@ -49,8 +49,8 @@
   function loadTopic(childId) {
     $.getJSON(api_url + '/' + childId + '?expand=body.view', function(data) {
         var topicHtml = data.body.view.value;
-               
-        $('#output').empty().append(topicHtml);
+        topicHtml += 'Was this helpful? Yes | No';  //TODO
+        $('#helpContent').empty().append(topicHtml);
     });
   }
   
