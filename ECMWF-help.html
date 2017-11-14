@@ -55,7 +55,7 @@
       $('#helpContent a').click(function(event) {
         if(isWikiLink(this.pathname)) {
           var arrUrl = [];
-          arrUrl = this.target.split('/'); // /wiki/display/ECAC/Security+authentication
+          arrUrl = this.pathname.split('/'); // /wiki/display/ECAC/Security+authentication
           console.log(arrUrl);
           $.getJSON(api_url + '?title' + arrUrl[2] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
