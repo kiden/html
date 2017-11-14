@@ -22,10 +22,14 @@
     pageId = getParameterByName('pageId');
     console.log(pageId);
     
-    swdocSelected[pageId] = (typeof pageId == 'undefined' ? swdoc : (typeof swdoc[pageId] == 'undefined' ? swdoc[pageId] : ));
+    var swdocSelected = {};
+    if(typeof pageId != 'undefined' && typeof swdoc[pageId] != 'undefined') {
+      swdocSelected[pageId] = swdoc[pageId];
+    else
+      swdocSelected = swdoc;
+    }
     console.log(swdocSelected);
-
-                             
+     
     var url = 'https://software.ecmwf.int/wiki/';
     var api_url = url + 'rest/api/content/search?cql=parent=';
 
