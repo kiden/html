@@ -28,10 +28,9 @@
       html += '<h1>' + record.name + ' ' + (typeof record.alt=='undefined' ? 'Documentation' : record.alt) + '</h1>';
       $.each(data.results, function(key,result) {
         html += '<h2><a href="' + url + data._links.webui + '">' + result.title + '</a></h2>'; //'<h3><a href="/wiki/' + result._links.webui + '">' + result.title + '</a></h3>';
-        html += result.body.export_view.value;
       });
     });
-    $('#intra_wb').empty().append(html);
+    $('#output').empty().append(html);
   });
   
 </script>
