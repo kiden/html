@@ -29,10 +29,10 @@
         //console.log(data);
         $.each(data.results, function(key,child) { //console.log(child);
           html += '<h2><a href="' + url + child._links.webui + '">' + child.title + '</a></h2>';
-        }); console.log(html);
-      });
-    }); console.log(html);
-    $('#output').empty().append(html);
+        }); //console.log(html);
+        $('#output').append(html);
+      });     
+    });
   });
 </script>
 </head>
