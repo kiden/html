@@ -60,7 +60,7 @@
           $.getJSON(api_url + '?title=' + arrUrl[4] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
           });
-        } else if(isBookmark(this.pathname))
+        } else if(isBookmark(this.pathname)) {
           location.hash = "#" + this.pathname;
         } else {
           if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
