@@ -86,7 +86,7 @@
   function writeHistory(id,type) { console.log('write'); 
     clickNumber++;  console.log(clickNumber);
     var removeFrom = (typeof clickHistory[clickNumber]=='undefined' ? 0 : clickNumber+1);  //if starting a new history path
-    clickHistory.slice(clickNumber,removeFrom,{'pageId':id, 'type':type});
+    clickHistory.splice(clickNumber,removeFrom,{'pageId':id, 'type':type});
     console.log(clickHistory);   
   }
   
