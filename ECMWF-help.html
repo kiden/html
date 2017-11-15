@@ -72,7 +72,7 @@
   }
               
   function isBookmark(href) {
-    return (href.substring(0,2)=='#' ? true : false);
+    return (href.substring(0,1)=='#' ? true : false);
   }
   function isWikiLink(href) {
     return (href.substring(0,13)=='/wiki/display' ? true : false);
