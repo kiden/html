@@ -87,10 +87,12 @@
   }
   
   function goHistory(clickIncrement) {   console.log('read'); 
-    clickNumber += clickIncrement;  console.log(clickNumber);
     if(typeof clickHistory[clickNumber]=='undefined') {
       return false; console.log('step ' + clickNumber + ' doesn\'t exist');
+    } else {
+      clickNumber += clickIncrement;  console.log(clickNumber);
     }
+                                      
     if(clickHistory[clickNumber].type=='parent') {
       loadTopics(clickHistory[clickNumber].pageId);  //list of topics
     } else {  //child
