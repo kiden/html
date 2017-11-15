@@ -52,7 +52,7 @@
       $('#helpContent').empty().append(topicHtml);
 
       //add event listener to any links
-      $('#helpContent a').click(function(event) {
+      $('#helpContent a').click(function(event) { console.log(event); console.log(this);
         event.preventDefault();
         if(isWikiLink(this.pathname)) {
           var arrUrl = [];
@@ -60,6 +60,8 @@
           $.getJSON(api_url + '?title=' + arrUrl[4] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
           });
+        } else if(isBookmark(this.pathname))
+          location.hash = "#" + this.pathname;
         } else {
           if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
             window.open(this.pathname);
@@ -69,8 +71,11 @@
     });
   }
               
+  function isBookmark(href) {
+    return (href.substring(0,2)=='#' ? true : false);
+  }
   function isWikiLink(href) {
-    return (href.substring(0,13)=='/wiki/display' ? true : false );
+    return (href.substring(0,13)=='/wiki/display' ? true : false);
   }
   
   function getParameterByName(name) {
