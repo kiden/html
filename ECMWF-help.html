@@ -2,51 +2,56 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+  /****************
+  Page IDs of 'Documentation' page unless stated otherwise
+  *******************/
+  var swdoc = {};
+  swdoc[17531265] = {'name':'User Documentation'}; //default
+  swdoc[35753255] = {'name':'BUFRDC'};
+  swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
+  swdoc[45748339] = {'name':'ecCodes'};
+  swdoc[13207146] = {'name':'ecFlow'};
+  swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
+  swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
+  swdoc[7373225] = {'name':'GRIB-API'};
+  swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
+  swdoc[14157950] = {'name':'Metview'};
+
+  pageId = (typeof pageId != 'undefined' && typeof swdoc[pageId] != 'undefined') ? 17531265 : getParameterByName('pageId'); //default - User Doc space  
+  
   var url = 'https://software.ecmwf.int/wiki';
-  var api_url = url + '/rest/api/content';
+  var apiUrl = url + '/rest/api/content';
+  
+  var clickHistory = [];
+  var clickNumber = 0;
   
   $(function() {
-    /****************
-    Page IDs of 'Documentation' page unless stated otherwise
-    *******************/
-    var swdoc = {};
-    swdoc[35753255] = {'name':'BUFRDC'};
-    swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
-    swdoc[45748339] = {'name':'ecCodes'};
-    swdoc[13207146] = {'name':'ecFlow'};
-    swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
-    swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
-    swdoc[7373225] = {'name':'GRIB-API'};
-    swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
-    swdoc[14157950] = {'name':'Metview'};
+    var headerHtml = '<h1>' + parent.name + ' Help</h1>';
+    headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
+    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="loadTopics(parentId)">home</span> | print | search online documentation |<p>';
+    $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
     
-    //filter the help file to the selected space, if applicable
-    pageId = getParameterByName('pageId');
-    var swdocSelected = {};
-    if(typeof pageId != 'undefined' && typeof swdoc[pageId] != 'undefined') {
-      swdocSelected[pageId] = swdoc[pageId];
-    } else {
-      swdocSelected = swdoc;
-    }
-
-    $.each(swdocSelected, function(parentId,parent) {
-      $.getJSON(api_url + '/search?cql=parent=' + parentId, function(data) {
-        var headerHtml = '<h1>' + parent.name + ' Help</h1>';
-        headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-        headerHtml += '<p class="nav">| <a href="' + window.location.href + '">home</a> | print | search online documentation |<p>';
-        $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
-
-        var topicsHtml = '<h2>Topics</h2>';
-        $.each(data.results, function(key,child) { //console.log(child);
-          topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
-        });
-        $('#helpContent').empty().append(topicsHtml);  //only shows last if array; TODO: default to s/w/ space if no ID and remove each loop
-      });     
-    });
+    loadTopics(pageId);
   });
   
+  function loadTopics(parentId) {
+    //write to history
+    writeHistory(parentId,'parent');    
+ 
+    $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
+      var topicsHtml = '<h2>Topics</h2>';
+      $.each(data.results, function(key,child) { //console.log(child);
+        topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+      });
+      $('#helpContent').empty().append(topicsHtml);
+    });     
+  }
+  
   function loadTopic(childId) {
-    $.getJSON(api_url + '/' + childId + '?expand=body.view', function(data) {
+    //write to history
+    writeHistory(childId,'child');
+    
+    $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
       var topicHtml = data.body.view.value;
       topicHtml += 'Was this helpful? Yes | No';  //TODO
       $('#helpContent').empty().append(topicHtml);
@@ -55,12 +60,16 @@
       $('#helpContent a').click(function(event) {
         event.preventDefault();  //first, stop the link working
 
+        var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
+        
+        //build the history
+        clickHistory.push(href);
+        
         //then deal with what type of link it is
-        var href = event.currentTarget.attributes['href'].nodeValue;
         if(isWikiLink(href)) {
           var arrUrl = [];
           arrUrl = href.split('/');
-          $.getJSON(api_url + '?title=' + arrUrl[4] + '&spaceKey=' + arrUrl[3], function(data) {
+          $.getJSON(apiUrl + '?title=' + arrUrl[4] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
           });
         } else if(isBookmark(href)) {
@@ -74,9 +83,30 @@
     });
   }
               
+  function writeHistory(id,type) { console.log('write'); 
+    clickNumber++;  console.log(clickNumber);
+    var removeFrom = (typeof clickHistory[clickNumber]=='undefined' ? 0 : clickNumber+1);  //if starting a new history path
+    clickHistory.slice(clickNumber,removeFrom,{'pageId':id, 'type':type});
+    console.log(clickHistory);   
+  }
+  
+  function goHistory(clickIncrement) {   console.log('read'); 
+    clickNumber += clickIncrement;  console.log(clickNumber);
+    if(typeof clickHistory[clickNumber]=='undefined') {
+      return false; console.log('step ' + clickNumber + ' doesn\'t exist');
+    }
+    if(clickHistory[clickNumber].type=='parent') {
+      loadTopics(clickHistory[clickNumber].pageId);  //list of topics
+    } else {  //child
+      loadTopic(clickHistory[clickNumber].pageId);  //topic content
+    }
+    console.log(clickHistory); 
+  }
+  
   function isBookmark(href) {
     return (href.substring(0,1)=='#' ? true : false);
   }
+  
   function isWikiLink(href) {
     return (href.substring(0,13)=='/wiki/display' ? true : false);
   }
