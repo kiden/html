@@ -36,7 +36,7 @@
   });
   
   function loadTopics(parentId) {
-        
+    writeHistory(parentId,'parent');        
  
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
@@ -48,11 +48,10 @@
   }
   
   function loadTopic(childId) {
-    //write to history
     writeHistory(childId,'child');
     
     $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
-      var topicHtml = data.body.view.value;
+      var topicHtml = data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
       topicHtml += 'Was this helpful? Yes | No';  //TODO
       $('#helpContent').empty().append(topicHtml);
 
