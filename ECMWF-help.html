@@ -87,7 +87,7 @@
   }
   
   function goHistory(clickIncrement) {   console.log('read'); 
-    if(typeof clickHistory[clickNumber]=='undefined') {
+    if(typeof clickHistory[clickNumber + clickIncrement]=='undefined') {
       return false; console.log('step ' + clickNumber + ' doesn\'t exist');
     } else {
       clickNumber += clickIncrement;  console.log(clickNumber);
