@@ -23,6 +23,7 @@
   var apiUrl = url + '/rest/api/content';
   
   var clickHistory = [];
+  writeHistory(pageId,'parent');
   var clickNumber = 0;
   
   $(function() {
@@ -35,8 +36,7 @@
   });
   
   function loadTopics(parentId) {
-    //write to history
-    writeHistory(parentId,'parent');    
+        
  
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
@@ -108,7 +108,7 @@
   }
   
   function isWikiLink(href) {
-    return (href.substring(0,13)=='/wiki/display' ? true : false);
+    return (href.substring(0,13)=='/wiki/display' || href.substring(26,39)=='/wiki/display' ? true : false);
   }
   
   function getParameterByName(name) {
