@@ -52,21 +52,22 @@
       $('#helpContent').empty().append(topicHtml);
 
       //add event listener to any links
-      $('#helpContent a').click(function(event) { console.log(event); console.log(this);
+      $('#helpContent a').click(function(event) {
+        event.preventDefault();  //first, stop the link working
+
+        //then deal with what type of link it is
         var href = event.currentTarget.attributes['href'].nodeValue;
-        console.log(href);
-        event.preventDefault();
-        if(isWikiLink(this.pathname)) {
+        if(isWikiLink(href)) {
           var arrUrl = [];
-          arrUrl = this.pathname.split('/'); // /wiki/display/ECAC/Security+authentication
+          arrUrl = href.split('/');
           $.getJSON(api_url + '?title=' + arrUrl[4] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
           });
-        } else if(isBookmark(this.pathname)) {
-          location.hash = "#" + this.pathname;
+        } else if(isBookmark(href)) {
+          location.hash = "#" + href;
         } else {
           if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
-            window.open(this.pathname);
+            window.open(href);
           }
         }
       });
