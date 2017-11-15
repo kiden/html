@@ -87,10 +87,9 @@
   }
   
   function goHistory(clickIncrement) {   console.log('read'); 
-    if(typeof clickHistory[clickNumber + clickIncrement]=='undefined') {
+    clickNumber += clickIncrement;  console.log(clickNumber);
+    if(typeof clickHistory[clickNumber]=='undefined') {
       return false; console.log('step ' + clickNumber + ' doesn\'t exist');
-    } else {
-      clickNumber += clickIncrement;  console.log(clickNumber);
     }
                                       
     if(clickHistory[clickNumber].type=='parent') {
