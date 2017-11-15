@@ -53,6 +53,8 @@
 
       //add event listener to any links
       $('#helpContent a').click(function(event) { console.log(event); console.log(this);
+        var href = event.currentTarget.attributes['href'].nodeValue;
+        console.log(href);
         event.preventDefault();
         if(isWikiLink(this.pathname)) {
           var arrUrl = [];
