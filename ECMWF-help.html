@@ -62,9 +62,6 @@
 
         var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
         
-        //build the history
-        clickHistory.push(href);
-        
         //then deal with what type of link it is
         if(isWikiLink(href)) {
           var arrUrl = [];
