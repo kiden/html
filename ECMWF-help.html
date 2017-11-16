@@ -40,14 +40,24 @@
       function activateNav() {
         if(typeof clickHistory[clickNumber-1]!='undefined') {
           $('#back').addClass("active");
-          $('#back').click(function(event) {
+          $('#back').bind('click',function(event) {
            goHistory(-1);
           });              
+        } else {
+          $('#back').removeClass("active");
+          $('#back').unbind('click',function(event) {
+           goHistory(-1);
+          });           
         }
         
         if(typeof clickHistory[clickNumber+1]!='undefined') {
           $('#fwd').addClass("active");
-          $('#fwd').click(function(event) {
+          $('#fwd').bind('click',function(event) {
+            goHistory(1);
+          });
+        } else {
+          $('#fwd').removeClass("active");
+          $('#fwd').unbind('click',function(event) {
             goHistory(1);
           });
         }
