@@ -30,7 +30,12 @@
     headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
     headerHtml += '<p class="nav">| <span id="back"><<<</span> | <span id="fwd">>>></span> | <span onclick="loadTopics(' + pageId + ');">home</span> | print | search online documentation |<p>';
     $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
+     
+    loadTopics(pageId);
+    activateNav():
+  });
   
+  function activateNav() {
     if(typeof clickHistory[clickNumber-1]!='undefined') {
       $('#back').click(function(event) {
        goHistory(-1);
@@ -41,9 +46,7 @@
         goHistory(1);
       }).className="active";
     }
-    
-    loadTopics(pageId);
-  });
+  }
   
   function loadTopics(parentId,byHistory) {
     
