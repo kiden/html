@@ -39,16 +39,17 @@
 
       function activateNav() {
         if(typeof clickHistory[clickNumber-1]!='undefined') {
+          $('#back').addClass="active";
           $('#back').click(function(event) {
            goHistory(-1);
           });
-          $('#back').addClass="active";    
+              
         }
         if(typeof clickHistory[clickNumber+1]!='undefined') {
+          $('#fwd').addClass="active";
           $('#fwd').click(function(event) {
             goHistory(1);
           });
-          $('#fwd').addClass="active";
         }
       }
 
