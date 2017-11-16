@@ -29,7 +29,7 @@
   $(function() {
     var headerHtml = '<h1>' + parent.name + ' Help</h1>';
     headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="writeHistory(); loadTopics(pageId)">home</span> | print | search online documentation |<p>';
+    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="writeHistory(pageId,'parent'); loadTopics(pageId)">home</span> | print | search online documentation |<p>';
     $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
     
     loadTopics(pageId);
@@ -40,7 +40,7 @@
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
       $.each(data.results, function(key,child) { //console.log(child);
-        topicsHtml += '<p class="topic" onclick="writeHistory(); loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+        topicsHtml += '<p class="topic" onclick="writeHistory(child.id,'child'); loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
       });
       $('#helpContent').empty().append(topicsHtml);
     });     
