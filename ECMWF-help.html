@@ -89,12 +89,11 @@
   }
   
   function goHistory(clickIncrement) { 
-    clickNumber += clickIncrement;
-    if(typeof clickHistory[clickNumber]=='undefined') {
+    if(typeof clickHistory[clickNumber+clickIncrement]=='undefined') { //there's no back or fwd possible
       return false; console.log('step ' + clickNumber + ' doesn\'t exist');
     }
                                       
-    //clickNumber--; //to cancel out the increment in next step (this only runs if early end fails in line above)
+    clickNumber += clickIncrement;
     if(clickHistory[clickNumber].type=='parent') {
       loadTopics(clickHistory[clickNumber].pageId);  //list of topics
     } else {  //child
