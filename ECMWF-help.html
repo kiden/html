@@ -32,7 +32,7 @@
     $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
      
     loadTopics(pageId);
-    activateNav();
+
   });
   
   function activateNav() {
@@ -51,6 +51,7 @@
   function loadTopics(parentId,byHistory) {
     
     if(!byHistory) writeToHistory(parentId,'parent'); //i.e. this should only run if not called from back/fwd
+    activateNav();  //make the nav match the history
  
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
@@ -64,6 +65,7 @@
   function loadTopic(childId,byHistory) {
     
     if(!byHistory) writeToHistory(childId,'child'); //i.e. this should only run if not called from back/fwd
+    activateNav();  //make the nav match the history
     
     $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
       var topicHtml = '<h2>' + data.title + '</h2>';
