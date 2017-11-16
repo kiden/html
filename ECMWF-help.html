@@ -39,12 +39,12 @@
     if(typeof clickHistory[clickNumber-1]!='undefined') {
       $('#back').click(function(event) {
        goHistory(-1);
-      }).className="active";    
+      }).addClass="active";    
     }
     if(typeof clickHistory[clickNumber+1]!='undefined') {
       $('#fwd').click(function(event) {
         goHistory(1);
-      }).className="active";
+      }).addClass="active";
     }
   }
   
