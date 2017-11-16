@@ -92,6 +92,7 @@
       return false; console.log('step ' + clickNumber + ' doesn\'t exist');
     }
                                       
+    clickNumber--; //to cancel out the increment in next step (this only runs if early end fails in line above)
     if(clickHistory[clickNumber].type=='parent') {
       loadTopics(clickHistory[clickNumber].pageId);  //list of topics
     } else {  //child
