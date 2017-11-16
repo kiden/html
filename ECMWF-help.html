@@ -24,15 +24,15 @@
   
   var clickHistory = [];
   var clickNumber = -1;
-  writeHistory(pageId,'parent');
+  
   
   $(function() {
     var headerHtml = '<h1>' + parent.name + ' Help</h1>';
     headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="writeHistory(pageId,'parent'); loadTopics(pageId);">home</span> | print | search online documentation |<p>';
+    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="writeHistoryAndLoad(pageId,'parent');">home</span> | print | search online documentation |<p>';
     $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
     
-    loadTopics(pageId);
+    writeHistoryAndLoad(pageId,'parent');
   });
   
   function loadTopics(parentId) {      
@@ -56,7 +56,7 @@
       //add event listener to any links
       $('#helpContent a').click(function(event) {
         event.preventDefault();  //first, stop the link working
-        writeHistory(childId,'child'); //then add this click to the history
+        writeHistoryAndLoad(childId,'child'); //then add this click to the history
 
         var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
         
@@ -78,26 +78,30 @@
     });
   }
               
-  function writeHistory(id,type) { console.log('write'); 
-    clickNumber++;  console.log(clickNumber);
+  function writeHistoryAndLoad(id,type) {
+    clickNumber++;
     var removeFrom = (typeof clickHistory[clickNumber+1]=='undefined' ? clickNumber+1 : 0);  //if starting a new history path
     clickHistory.splice(clickNumber,removeFrom,{'pageId':id, 'type':type});
-    console.log(clickHistory);   
+
+    if(type=='parent') {
+      loadTopics(id);
+    } else {  //child
+      loadTopic(id);
+    }
   }
   
-  function goHistory(clickIncrement) {   console.log('read'); 
-    clickNumber += clickIncrement;  console.log(clickNumber);
+  function goHistory(clickIncrement) { 
+    clickNumber += clickIncrement;
     if(typeof clickHistory[clickNumber]=='undefined') {
       return false; console.log('step ' + clickNumber + ' doesn\'t exist');
     }
                                       
-    clickNumber--; //to cancel out the increment in next step (this only runs if early end fails in line above)
+    //clickNumber--; //to cancel out the increment in next step (this only runs if early end fails in line above)
     if(clickHistory[clickNumber].type=='parent') {
       loadTopics(clickHistory[clickNumber].pageId);  //list of topics
     } else {  //child
       loadTopic(clickHistory[clickNumber].pageId);  //topic content
     }
-    console.log(clickHistory); 
   }
   
   function isBookmark(href) {
