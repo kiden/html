@@ -1,152 +1,156 @@
+<!DOCTYPE html>
 <html>
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-  /****************
-  Page IDs of 'Documentation' page unless stated otherwise
-  *******************/
-  var swdoc = {};
-  swdoc[17531265] = {'name':'User Documentation'}; //default
-  swdoc[35753255] = {'name':'BUFRDC'};
-  swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
-  swdoc[45748339] = {'name':'ecCodes'};
-  swdoc[13207146] = {'name':'ecFlow'};
-  swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
-  swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
-  swdoc[7373225] = {'name':'GRIB-API'};
-  swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
-  swdoc[14157950] = {'name':'Metview'};
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      /****************
+      Page IDs of 'Documentation' page unless stated otherwise
+      *******************/
+      var swdoc = {};
+      swdoc[17531265] = {'name':'User Documentation'}; //default
+      swdoc[35753255] = {'name':'BUFRDC'};
+      swdoc[40804824] = {'name':'ECaccess','alt':'User guide'};
+      swdoc[45748339] = {'name':'ecCodes'};
+      swdoc[13207146] = {'name':'ecFlow'};
+      swdoc[41648799] = {'name':'ECMWF Web API','alt':'need to parse the content on this one....'};
+      swdoc[22908294] = {'name':'EMOSLIB','alt':'Using EMOSLIB'};
+      swdoc[7373225] = {'name':'GRIB-API'};
+      swdoc[14157858] = {'name':'Magics','alt':'Using Magics'};
+      swdoc[14157950] = {'name':'Metview'};
 
-  pageId = (typeof pageId != 'undefined' && typeof swdoc[pageId] != 'undefined') ? 17531265 : getParameterByName('pageId'); //default - User Doc space  
-  
-  var url = 'https://software.ecmwf.int/wiki';
-  var apiUrl = url + '/rest/api/content';
-  
-  var clickHistory = [];
-  var clickNumber = -1; 
-  
-  $(function() {
-    var headerHtml = '<h1>' + parent.name + ' Help</h1>';
-    headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-    headerHtml += '<p class="nav">| <span id="back"><<<</span> | <span id="fwd">>>></span> | <span onclick="loadTopics(' + pageId + ');">home</span> | print | search online documentation |<p>';
-    $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
-     
-    loadTopics(pageId);
+      pageId = (typeof pageId != 'undefined' && typeof swdoc[pageId] != 'undefined') ? 17531265 : getParameterByName('pageId'); //default - User Doc space  
 
-  });
-  
-  function activateNav() {
-    if(typeof clickHistory[clickNumber-1]!='undefined') {
-      $('#back').click(function(event) {
-       goHistory(-1);
-      });
-      $('#back').addClass="active";    
-    }
-    if(typeof clickHistory[clickNumber+1]!='undefined') {
-      $('#fwd').click(function(event) {
-        goHistory(1);
-      });
-      $('#fwd').addClass="active";
-    }
-  }
-  
-  function loadTopics(parentId,byHistory) {
-    
-    if(!byHistory) writeToHistory(parentId,'parent'); //i.e. this should only run if not called from back/fwd
-    activateNav();  //make the nav match the history
- 
-    $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
-      var topicsHtml = '<h2>Topics</h2>';
-      $.each(data.results, function(key,child) { //console.log(child);
-        topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
-      });
-      $('#helpContent').empty().append(topicsHtml);
-    });     
-  }
-  
-  function loadTopic(childId,byHistory) {
-    
-    if(!byHistory) writeToHistory(childId,'child'); //i.e. this should only run if not called from back/fwd
-    activateNav();  //make the nav match the history
-    
-    $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
-      var topicHtml = '<h2>' + data.title + '</h2>';
-      topicHtml += data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
-      topicHtml += 'Was this helpful? Yes | No';  //TODO
-      $('#helpContent').empty().append(topicHtml);
+      var url = 'https://software.ecmwf.int/wiki';
+      var apiUrl = url + '/rest/api/content';
 
-      //add event listener to any links
-      $('#helpContent a').click(function(event) {
-        event.preventDefault();  //first, stop the link working
-        
-        var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
-        
-        //then deal with what type of link it is
-        var wikiLink = getWikiLink(href);  //returns false if not a wikiLink
-        if(wikiLink) {
-          var arrUrl = [];
-          arrUrl = wikiLink.split('/');  //TODO: this won't work on absolute software links
-          var arrPageTitle = [];
-          arrPageTitle = arrUrl[4].split('#');
-          $.getJSON(apiUrl + '?title=' + arrPageTitle[0] + '&spaceKey=' + arrUrl[3], function(data) {
-            loadTopic(data.results[0].id);
-            if(arrPageTitle[1]) location.hash = '#' + arrPageTitle[1];
+      var clickHistory = [];
+      var clickNumber = -1; 
+
+      $(function() {
+        var headerHtml = '<h1>' + parent.name + ' Help</h1>';
+        headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
+        headerHtml += '<p class="nav">| <span id="back"><<<</span> | <span id="fwd">>>></span> | <span onclick="loadTopics(' + pageId + ');">home</span> | print | search online documentation |<p>';
+        $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
+
+        loadTopics(pageId);
+
+      });
+
+      function activateNav() {
+        if(typeof clickHistory[clickNumber-1]!='undefined') {
+          $('#back').click(function(event) {
+           goHistory(-1);
           });
-        } else if(isBookmark(href)) {
-          location.hash = href;
-        } else {
-          if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
-            window.open(href);
-          }
+          $('#back').addClass="active";    
         }
-      });
-    });
-  }
-              
-  function writeToHistory(id,type) {
-    clickNumber++;
-    //adds new history item to array, removing anything beyond it
-    clickHistory.splice(clickNumber, clickHistory.length - clickNumber, {'pageId':id, 'type':type}); 
-  }
-  
-  function goHistory(clickIncrement) { //only called if back/fwd possible (that's handled in the building of the nav buttons
-    clickNumber += clickIncrement;
-    if(clickHistory[clickNumber].type=='parent') {
-      loadTopics(clickHistory[clickNumber].pageId,true);  //list of topics; true means it's loading from history
-    } else {  //child
-      loadTopic(clickHistory[clickNumber].pageId,true);  //topic content; true means it's loading from history
-    }
-  }
-  
-  function isBookmark(href) {
-    return (href.substring(0,1)=='#' ? true : false);
-  }
-  
-  function getWikiLink(href) { 
-    if(href.substring(0,13)=='/wiki/display') {
-      return href;
-    } else if(href.substring(26,39)=='/wiki/display') {
-      return href.substring(26);
-    }
-    return false;
-  }
-  
-  function getParameterByName(name) {
-      var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-  }
+        if(typeof clickHistory[clickNumber+1]!='undefined') {
+          $('#fwd').click(function(event) {
+            goHistory(1);
+          });
+          $('#fwd').addClass="active";
+        }
+      }
 
-</script>
-<style>
-  h1 { margin-bottom: 0; }
-  .alt { margin-top: 0; }
-  .nav { color: lightgrey; }
-  .nav .active { color: black; cursor: pointer; }
-  .topic { margin-top: 8px; margin-bottom: 8px; }
-</style>
-</head>
-<body>
-  <div id="helpHeader"></div>
-  <div id="helpContent"></div>
-</body>
+      function loadTopics(parentId,byHistory) {
+
+        if(!byHistory) writeToHistory(parentId,'parent'); //i.e. this should only run if not called from back/fwd
+        activateNav();  //make the nav match the history
+
+        $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
+          var topicsHtml = '<h2>Topics</h2>';
+          $.each(data.results, function(key,child) { //console.log(child);
+            topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+          });
+          $('#helpContent').empty().append(topicsHtml);
+        });     
+      }
+
+      function loadTopic(childId,byHistory) {
+
+        if(!byHistory) writeToHistory(childId,'child'); //i.e. this should only run if not called from back/fwd
+        activateNav();  //make the nav match the history
+
+        $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
+          var topicHtml = '<h2>' + data.title + '</h2>';
+          topicHtml += data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
+          topicHtml += '<div id="feedback"><p>Was this helpful?</p><p><span class="feedbackButton">Yes</span><span class="feedbackButton">No</span>';  //TODO: what action to take
+          $('#helpContent').empty().append(topicHtml);
+
+          //add event listener to any links
+          $('#helpContent a').click(function(event) {
+            event.preventDefault();  //first, stop the link working
+
+            var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
+
+            //then deal with what type of link it is
+            var wikiLink = getWikiLink(href);  //returns false if not a wikiLink
+            if(wikiLink) {
+              var arrUrl = [];
+              arrUrl = wikiLink.split('/');  //TODO: this won't work on absolute software links
+              var arrPageTitle = [];
+              arrPageTitle = arrUrl[4].split('#');
+              $.getJSON(apiUrl + '?title=' + arrPageTitle[0] + '&spaceKey=' + arrUrl[3], function(data) {
+                loadTopic(data.results[0].id);
+                if(arrPageTitle[1]) location.hash = '#' + arrPageTitle[1];
+              });
+            } else if(isBookmark(href)) {
+              location.hash = href;
+            } else {
+              if(confirm("This is a link to a site outside this help system. Do you wish to proceed (opens in new window)?")) {
+                window.open(href);
+              }
+            }
+          });
+        });
+      }
+
+      function writeToHistory(id,type) {
+        clickNumber++;
+        //adds new history item to array, removing anything beyond it
+        clickHistory.splice(clickNumber, clickHistory.length - clickNumber, {'pageId':id, 'type':type}); 
+      }
+
+      function goHistory(clickIncrement) { //only called if back/fwd possible (that's handled in the building of the nav buttons
+        clickNumber += clickIncrement;
+        if(clickHistory[clickNumber].type=='parent') {
+          loadTopics(clickHistory[clickNumber].pageId,true);  //list of topics; true means it's loading from history
+        } else {  //child
+          loadTopic(clickHistory[clickNumber].pageId,true);  //topic content; true means it's loading from history
+        }
+      }
+
+      function isBookmark(href) {
+        return (href.substring(0,1)=='#' ? true : false);
+      }
+
+      function getWikiLink(href) { 
+        if(href.substring(0,13)=='/wiki/display') {
+          return href;
+        } else if(href.substring(26,39)=='/wiki/display') {
+          return href.substring(26);
+        }
+        return false;
+      }
+
+      function getParameterByName(name) {
+          var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+          return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+      }
+
+    </script>
+    <style>
+      h1 { margin-bottom: 0; }
+      .alt { margin-top: 0; }
+      .nav { color: lightgrey; }
+      .nav .active { color: black; cursor: pointer; }
+      .topic { margin-top: 8px; margin-bottom: 8px; }
+      #feedback { width: 120px; height: 60px; background-color: grey; }
+    </style>
+  </head>
+  <body>
+    <div id="helpButtons"></div>
+    <div id="helpHeader"></div>
+    <div id="helpContent"></div>
+  </body>
 </html>
