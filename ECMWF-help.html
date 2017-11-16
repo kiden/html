@@ -43,7 +43,7 @@
   
   function loadTopics(parentId,byHistory) {
     
-    if(!byHistory) writeToHistory(parentId,'parent'); //this should only run if not called from back/fwd
+    if(!byHistory) writeToHistory(parentId,'parent'); //i.e. this should only run if not called from back/fwd
  
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
@@ -56,10 +56,11 @@
   
   function loadTopic(childId,byHistory) {
     
-    if(!byHistory) writeToHistory(childId,'child'); //this should only run if not called from back/fwd
+    if(!byHistory) writeToHistory(childId,'child'); //i.e. this should only run if not called from back/fwd
     
     $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
-      var topicHtml = data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
+      var topicHtml = '<h2>' + data.title + '</h2>';
+      topicHtml += data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
       topicHtml += 'Was this helpful? Yes | No';  //TODO
       $('#helpContent').empty().append(topicHtml);
 
@@ -93,16 +94,12 @@
     clickHistory.splice(clickNumber, clickHistory.length - clickNumber, {'pageId':id, 'type':type}); 
   }
   
-  function goHistory(clickIncrement) { 
-    if(typeof clickHistory[clickNumber+clickIncrement]=='undefined') { //there's no back or fwd possible
-      return false; console.log('step ' + clickNumber + ' doesn\'t exist');
-    }
-                                      
+  function goHistory(clickIncrement) { //only called if back/fwd possible (that's handled in the building of the nav buttons
     clickNumber += clickIncrement;
     if(clickHistory[clickNumber].type=='parent') {
-      loadTopics(clickHistory[clickNumber].pageId,true);  //list of topics
+      loadTopics(clickHistory[clickNumber].pageId,true);  //list of topics; true means it's loading from history
     } else {  //child
-      loadTopic(clickHistory[clickNumber].pageId,true);  //topic content
+      loadTopic(clickHistory[clickNumber].pageId,true);  //topic content; true means it's loading from history
     }
   }
   
