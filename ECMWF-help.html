@@ -55,13 +55,13 @@
         if(typeof clickHistory[clickNumber+1]=='undefined') {  //remove styling and event listener
           $('#fwd').removeClass("active");
           $('#fwd').unbind('click',function(event) {
-            goHistory(-1);
+            goHistory(+1);
           });
         } else {
           if(!$('#fwd').hasClass("active")) {  //only add stying and event listener if not already there
             $('#fwd').addClass("active");
             $('#fwd').bind('click',function(event) {
-              goHistory(-1);
+              goHistory(+1);
             });
           }
         }
