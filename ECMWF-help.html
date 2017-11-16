@@ -79,7 +79,8 @@
               
   function writeHistoryAndLoad(id,type) {
     clickNumber++;
-    clickHistory.splice(clickNumber, clickNumber+1, {'pageId':id, 'type':type});
+    //adds new history item to array, removing anything beyond it
+    clickHistory.splice(clickNumber, clickHistory.length - clickNumber, {'pageId':id, 'type':type}); 
 
     if(type=='parent') {
       loadTopics(id);
