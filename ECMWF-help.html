@@ -52,7 +52,7 @@
           }
         }
         
-        if(typeof clickHistory[clickNumber-1]=='undefined') {  //remove styling and event listener
+        if(typeof clickHistory[clickNumber+1]=='undefined') {  //remove styling and event listener
           $('#fwd').removeClass("active");
           $('#fwd').unbind('click',function(event) {
             goHistory(-1);
