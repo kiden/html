@@ -40,9 +40,7 @@
       function activateNav() {
         if(typeof clickHistory[clickNumber-1]=='undefined') {  //remove styling and event listener
           $('#back').removeClass("active");
-          $('#back').unbind('click',function(event) {
-            goHistory(-1);
-          });
+          $('#back').unbind('click');
         } else {
           if(!$('#back').hasClass("active")) {  //only add stying and event listener if not already there
             $('#back').addClass("active");
@@ -54,8 +52,7 @@
         
         if(typeof clickHistory[clickNumber+1]=='undefined') {  //remove styling and event listener
           $('#fwd').removeClass("active");
-          $('#fwd').unbind('click',function(event) {
-            goHistory(+1);
+          $('#fwd').unbind('click');
           });
         } else {
           if(!$('#fwd').hasClass("active")) {  //only add stying and event listener if not already there
