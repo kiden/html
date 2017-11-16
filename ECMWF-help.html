@@ -33,10 +33,10 @@
   
     $('.nav .back').click(function(event) {
       if(typeof clickHistory[clickNumber-1]!='undefined') goHistory(-1);
-    }
+    });
     $('.nav .fwd').click(function(event) {
       if(typeof clickHistory[clickNumber+1]!='undefined') goHistory(1);
-    }
+    });
                            
     loadTopics(pageId);
   });
