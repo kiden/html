@@ -28,24 +28,28 @@
   $(function() {
     var headerHtml = '<h1>' + parent.name + ' Help</h1>';
     headerHtml += '<p class="alt">(from ' + (typeof parent.alt=='undefined' ? 'Documentation' : parent.alt) + ')</p>';
-    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="writeHistoryAndLoad(' + pageId + ',\'parent\');">home</span> | print | search online documentation |<p>';
+    headerHtml += '<p class="nav">| <span onclick="goHistory(-1);"><<<</span> | <span onclick="goHistory(1);">>>></span> | <span onclick="loadTopics(' + pageId + ');">home</span> | print | search online documentation |<p>';
     $('#helpHeader').empty().append(headerHtml);  //only shows last if array;  TODO: default to s/w/ space if no ID and remove each loop
     
     writeHistoryAndLoad(pageId,'parent');
   });
   
-  function loadTopics(parentId) {      
+  function loadTopics(parentId,byHistory) {
+    
+    if(!byHistory) writeToHistory(parentId,'parent'); //this should only run if not called from back/fwd
  
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
       $.each(data.results, function(key,child) { //console.log(child);
-        topicsHtml += '<p class="topic" onclick="writeHistoryAndLoad(' + child.id + ',\'child\');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+        topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
       });
       $('#helpContent').empty().append(topicsHtml);
     });     
   }
   
-  function loadTopic(childId) {
+  function loadTopic(childId,byHistory) {
+    
+    if(!byHistory) writeToHistory(childId,'child'); //this should only run if not called from back/fwd
     
     $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
       var topicHtml = data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
@@ -55,8 +59,7 @@
       //add event listener to any links
       $('#helpContent a').click(function(event) {
         event.preventDefault();  //first, stop the link working
-        writeHistoryAndLoad(childId,'child'); //then add this click to the history
-
+        
         var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
         
         //then deal with what type of link it is
@@ -77,16 +80,10 @@
     });
   }
               
-  function writeHistoryAndLoad(id,type) {
+  function writeToHistory(id,type) {
     clickNumber++;
     //adds new history item to array, removing anything beyond it
     clickHistory.splice(clickNumber, clickHistory.length - clickNumber, {'pageId':id, 'type':type}); 
-
-    if(type=='parent') {
-      loadTopics(id);
-    } else {  //child
-      loadTopic(id);
-    }
   }
   
   function goHistory(clickIncrement) { 
@@ -96,9 +93,9 @@
                                       
     clickNumber += clickIncrement;
     if(clickHistory[clickNumber].type=='parent') {
-      loadTopics(clickHistory[clickNumber].pageId);  //list of topics
+      loadTopics(clickHistory[clickNumber].pageId,true);  //list of topics
     } else {  //child
-      loadTopic(clickHistory[clickNumber].pageId);  //topic content
+      loadTopic(clickHistory[clickNumber].pageId,true);  //topic content
     }
   }
   
