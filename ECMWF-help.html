@@ -40,7 +40,7 @@
     $.getJSON(apiUrl + '/search?cql=parent=' + parentId, function(data) {
       var topicsHtml = '<h2>Topics</h2>';
       $.each(data.results, function(key,child) { //console.log(child);
-        topicsHtml += '<p class="topic" onclick="loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
+        topicsHtml += '<p class="topic" onclick="writeHistory(); loadTopic(' + child.id + ');">' + child.title + '</p>'; //<a href="' + url + child._links.webui + '"></a>
       });
       $('#helpContent').empty().append(topicsHtml);
     });     
