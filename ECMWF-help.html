@@ -48,7 +48,6 @@
   }
   
   function loadTopic(childId) {
-    writeHistory(childId,'child');
     
     $.getJSON(apiUrl + '/' + childId + '?expand=body.view', function(data) {
       var topicHtml = data.body.view.value;  //TODO: rewrite image links as absolute (maybe links too, and then change later test that looks for wikilinks)
@@ -58,6 +57,7 @@
       //add event listener to any links
       $('#helpContent a').click(function(event) {
         event.preventDefault();  //first, stop the link working
+        writeHistory(childId,'child'); //then add this click to the history
 
         var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
         
@@ -81,7 +81,7 @@
               
   function writeHistory(id,type) { console.log('write'); 
     clickNumber++;  console.log(clickNumber);
-    var removeFrom = (typeof clickHistory[clickNumber]=='undefined' ? clickNumber : 0);  //if starting a new history path
+    var removeFrom = (typeof clickHistory[clickNumber+1]=='undefined' ? clickNumber+1 : 0);  //if starting a new history path
     clickHistory.splice(clickNumber,removeFrom,{'pageId':id, 'type':type});
     console.log(clickHistory);   
   }
