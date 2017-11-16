@@ -71,7 +71,7 @@
         var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
         
         //then deal with what type of link it is
-        var wikiLink == wikiLink(href);  /returns false if not a wikiLink
+        var wikiLink == wikiLink(href);  //returns false if not a wikiLink
         if(wikiLink) {
           var arrUrl = [];
           arrUrl = wikiLink.split('/');  //TODO: this won't work on absolute software links
@@ -111,7 +111,7 @@
     return (href.substring(0,1)=='#' ? true : false);
   }
   
-  function wikiLink(href) {  //TODO: return the relative href (or false)
+  function wikiLink(href) { 
     if(href.substring(0,13)=='/wiki/display') {
       return href;
     } else if(href.substring(26,39)=='/wiki/display') {
