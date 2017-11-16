@@ -71,11 +71,14 @@
         var href = event.currentTarget.attributes['href'].nodeValue; //the href of the clicked link
         
         //then deal with what type of link it is
-        if(isWikiLink(href)) {
+        if(var wikiLink == wikiLink(href)) {
           var arrUrl = [];
-          arrUrl = href.split('/');
-          $.getJSON(apiUrl + '?title=' + arrUrl[4] + '&spaceKey=' + arrUrl[3], function(data) {
+          arrUrl = wikiLink.split('/');  //TODO: this won't work on absolute software links
+          var arrPageTitle = [];
+          arrPageTitle = arrUrl[4].split('#');
+          $.getJSON(apiUrl + '?title=' + arrPageTitle[0] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
+            if(arrPageTitle[1]) location.hash = arrPageTitle[1];
           });
         } else if(isBookmark(href)) {
           location.hash = href;
@@ -107,8 +110,13 @@
     return (href.substring(0,1)=='#' ? true : false);
   }
   
-  function isWikiLink(href) {
-    return (href.substring(0,13)=='/wiki/display' || href.substring(26,39)=='/wiki/display' ? true : false);
+  function wikiLink(href) {  //TODO: return the relative href (or false)
+    if(href.substring(0,13)=='/wiki/display') {
+      return href;
+    } else if(href.substring(26,39)=='/wiki/display') {
+      return href.substring(26);
+    }
+    return false;
   }
   
   function getParameterByName(name) {
