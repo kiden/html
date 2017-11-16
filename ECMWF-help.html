@@ -79,7 +79,7 @@
           arrPageTitle = arrUrl[4].split('#');
           $.getJSON(apiUrl + '?title=' + arrPageTitle[0] + '&spaceKey=' + arrUrl[3], function(data) {
             loadTopic(data.results[0].id);
-            if(arrPageTitle[1]) location.hash = arrPageTitle[1];
+            if(arrPageTitle[1]) location.hash = '#' + arrPageTitle[1];
           });
         } else if(isBookmark(href)) {
           location.hash = href;
