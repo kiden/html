@@ -1,0 +1,61 @@
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <h1>Introduction</h1>
+        <p>The tests below should allow the iFraming of content from www, confluence, and apps (and any other subdomains ideally).</p>
+        <p>Once we know how to get them working on sites, we can use the same logic to get them working for gather.town.</p>
+        <h1>Tests</h1>
+        <h2>Public pages</h2>
+        <table>
+            <tr>
+                <td>
+                    <p><strong>Confluence TEST iFrame</strong></p>
+                    <iframe src="https://confluence-test.ecmwf.int/display/FUG/"></iframe>
+                    <p style="font-size: 0.8em;">https://confluence-test.ecmwf.int/display/FUG/</p>
+                </td>
+                <td>
+                    <p><strong>Confluence LIVE iFrame</strong></p>
+                    <iframe src="https://confluence.ecmwf.int/display/FUF/"></iframe>
+                    <p style="font-size: 0.8em;">https://confluence.ecmwf.int/display/FUF/</p>
+                </td>
+                <td>
+                    <p><strong>www iFrame</strong></p>
+                    <iframe src="https://www.ecmwf.int/en/publications"></iframe>
+                    <p style="font-size: 0.8em;">https://www.ecmwf.int/en/publications</p>
+                </td>
+                <td>
+                    <p><strong>apps iFrame</strong></p>
+                    <iframe src="https://apps.ecmwf.int/datasets"></iframe>
+                    <p style="font-size: 0.8em;">https://apps.ecmwf.int/datasets</p>
+                </td>
+            </tr>
+        </table>
+        <h2>Access protected pages</h2>
+        <table>
+            <tr>
+                <td>
+                    <p><strong>Confluence TEST iFrame</strong></p>
+                    <iframe src="https://confluence-test.ecmwf.int/display/INTRA/"></iframe>
+                    <p style="font-size: 0.8em;">https://confluence-test.ecmwf.int/display/INTRA/</p>
+                </td>
+                <td>
+                    <p><strong>Confluence LIVE iFrame</strong></p>
+                    <iframe src="https://confluence.ecmwf.int/display/INTRA/"></iframe>
+                    <p style="font-size: 0.8em;">https://confluence.ecmwf.int/display/INTRA/</p>
+                </td>
+                <td>
+                    <p><strong>www iFrame</strong></p>
+                    <iframe src="https://www.ecmwf.int/en/about/who-we-are/governance/council/100"></iframe>
+                    <p style="font-size: 0.8em;">https://www.ecmwf.int/en/about/who-we-are/governance/council/100</p>
+                </td>
+                <td>
+                    <p><strong>apps iFrame</strong></p>
+                    <iframe src="https://apps.ecmwf.int/mars-catalogue"></iframe>
+                    <p style="font-size: 0.8em;">https://apps.ecmwf.int/mars-catalogue</p>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
