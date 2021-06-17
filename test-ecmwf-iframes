@@ -5,7 +5,9 @@
     <body>
         <h1>Introduction</h1>
         <p>The tests below should allow the iFraming of content from www, confluence, and apps (and should be extended to any other ecmwf subdomains ideally).</p>
-        <p>Once we know how to get them working on sites, we can use the same logic to get them working for gather.town.</p>
+        <p>Ideally a copy of this test page needs hosting on apps, confluence, wwww (and any other ecmwf subdomains) so that we can see what it's like from each.</p>
+        <p>We should also test while logged in and logged out, in various combinations, e.g. log in on sites and looks at this page on other subdomains.</p>
+        <p>Once we know how to get them working on sites, we can use the same logic to get them working for gather.town - see also <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/kiden/html/master/test-ecmwf-iframes">external site test</a></p>
         <h1>Tests</h1>
         <h2>Public pages</h2>
         <table>
