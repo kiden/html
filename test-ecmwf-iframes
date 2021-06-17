@@ -1,32 +1,51 @@
 <html>
     <head>
-        
+        <style>
+            table {
+                wdith: 100%;
+            }
+            iframe {
+                width: 23vw;
+                height: 13vw;
+            }
+        </style>
     </head>
     <body>
-        <h1>Introduction</h1>
-        <p>The tests below should allow the iFraming of content from www, confluence, and apps (and should be extended to any other ecmwf subdomains ideally).</p>
-        <p>Ideally a copy of this test page needs hosting on apps, confluence, wwww (and any other ecmwf subdomains) so that we can see what it's like from each.</p>
-        <p>We should also test while logged in and logged out, in various combinations, e.g. log in on sites and looks at this page on other subdomains.</p>
-        <p>Once we know how to get them working on sites, we can use the same logic to get them working for gather.town - see also <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/kiden/html/master/test-ecmwf-iframes">external site test</a></p>
-        <h1>Tests</h1>
+        <h1>Web content sharing tests</h1>
+        <p>The tests below test the sharing of content across the ecmwf subdomain origins (e.g. www, confluence, and apps).</p>
+        <p>To test how it works with login you must thoroughly kill all previous *.ecmwf.int auth sessions, then log in on just one of the subdomains (DO NOT visit any other subdomains!) and test the version of this page on that subdomain.</p>
+        <ul>
+            <li><a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/kiden/html/master/test-ecmwf-iframes">External site (should help with gather.town)</a></li>
+            <li><a href="https://sites.ecmwf.int/intranet/data/tests/test-conf-iframe.html">Sites</a></li>
+            <li><a href="">www (tbc)</a></li>
+            <li><a href="">stage (tbc)</a></li>
+            <li><a href="">apps (tbc)</a></li>
+            <li><a href="">apps test (tbc)</a></li>
+            <li><a href="">api test (tbc)</a></li>
+            <li><a href="">confluence (tbc)</a></li>
+            <li><a href="">confluence test (tbc)</a></li>
+        </ul>
+        <p>Now repeat the tests after establshing a session on all the subdomains.</p>
+        <p>Then repeat all of those tests across the major browsers our users use - see  (opens in new window)</p>
+        <h1>iFrames</h1>
         <h2>Public pages</h2>
         <table>
             <tr>
                 <td>
                     <p><strong><a href="https://confluence-test.ecmwf.int/display/FUG/">Confluence TEST iFrame</a></strong></p>
-                    <iframe src="https://confluence-test.ecmwf.int/display/FUG/"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://confluence-test.ecmwf.int/display/FUG/"></iframe></div>
                 </td>
                 <td>
                     <p><strong><a href="https://confluence.ecmwf.int/display/FUF/">Confluence LIVE iFrame</a></strong></p>
-                    <iframe src="https://confluence.ecmwf.int/display/FUF/"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://confluence.ecmwf.int/display/FUF/"></iframe></div>
                 </td>
                 <td>
                     <p><strong><a href="https://www.ecmwf.int/en/publications">www iFrame</a></strong></p>
-                    <iframe src="https://www.ecmwf.int/en/publications"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://www.ecmwf.int/en/publications"></iframe></div>
                 </td>
                 <td>
                     <p><strong><a href="https://apps.ecmwf.int/datasets">apps iFrame</a></strong></p>
-                    <iframe src="https://apps.ecmwf.int/datasets"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://apps.ecmwf.int/datasets"></iframe></div>
                 </td>
             </tr>
         </table>
@@ -35,21 +54,54 @@
             <tr>
                 <td>
                     <p><strong><a href="https://confluence-test.ecmwf.int/display/INTRA/">🔒 Confluence TEST iFrame</a></strong></p>
-                    <iframe src="https://confluence-test.ecmwf.int/display/INTRA/"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://confluence-test.ecmwf.int/display/INTRA/"></iframe></div>
                 </td>
                 <td>
                     <p><strong><a href="https://confluence.ecmwf.int/display/INTRA/">🔒 Confluence LIVE iFrame</a></strong></p>
-                    <iframe src="https://confluence.ecmwf.int/display/INTRA/"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://confluence.ecmwf.int/display/INTRA/"></iframe></div>
                 </td>
                 <td>
                     <p><strong><a href="https://www.ecmwf.int/en/about/who-we-are/governance/council/100">🔒 www iFrame</a></strong></p>
-                    <iframe src="https://www.ecmwf.int/en/about/who-we-are/governance/council/100"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://www.ecmwf.int/en/about/who-we-are/governance/council/100"></iframe></div>
                 </td>
                 <td>
                     <p><strong><a href="https://apps.ecmwf.int/mars-catalogue">🔒 apps iFrame</a></strong></p>
-                    <iframe src="https://apps.ecmwf.int/mars-catalogue"></iframe>
+                    <div class="stretchy-wrapper"><iframe src="https://apps.ecmwf.int/mars-catalogue"></iframe></div>
                 </td>
             </tr>
         </table>
+        <h1>Ajax requests</h1>
+        <div>
+            <script>
+                getContentXML('apps','https://api.ecmwf.int/v1/key/');
+                getContentAjax('apps2','https://api.ecmwf.int/v1/key/');
+                
+                function getContentXML(div,url) {
+                    const xhttp = new XMLHttpRequest();
+                    xhttp.onload = function() {
+                        document.getElementById(div).innerHTML = this.responseText;
+                    }
+                    xhttp.open("GET", url, true);
+                    xhttp.withCredentials = true;
+                    xhttp.send();
+                }
+                
+                function getContentAjax(div,url) {
+                    AJS.$.ajax({
+                        url: url,
+                        data: {format: 'json'},
+                        method: 'get',
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        crossDomain: true
+                    }).done(function(json) {  console.info(response);
+                        document.getElementById(div).innerHTML = this.responseText;
+                    });
+                }
+            </script>
+            <div id="apps"></div>
+            <div id="apps2"></div>
+        </div>
     </body>
 </html>
