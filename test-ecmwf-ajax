@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            table {
+                wdith: 100%;
+            }
+            iframe, div.iframe {
+                width: 23vw;
+                height: 13vw;
+            }
+            div.iframe {
+                background-color: #f1f1f1;
+                /*padding-top: 45%;*/
+                text-align: center;
+                overflow: scroll;
+            }
+        </style>
+        <script>
+            function getContent(div,url) {
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    document.getElementById(div).innerHTML = this.responseText;
+                }
+                xhttp.open("GET", url, true);
+                xhttp.withCredentials = true;
+                xhttp.send();
+            }
+            function postContent(div,url) {
+                
+                //var authorizationBasic = window.btoa(user + ':' + pass);
+                
+                var request = new XMLHttpRequest();
+                request.open('POST', oAuth.AuthorizationServer, true);
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                if (typeof user!=='undefined') request.setRequestHeader('Authorization', 'Basic ' + authorizationBasic);
+                request.setRequestHeader('Accept', 'application/json');
+                request.send('token=' + clientSecret);
+                
+                request.onreadystatechange = function () {
+                    if (request.readyState === 4) {
+                        document.getElementById(div).innerHTML = this.responseText;
+                    }
+                };                    
+                
+            }
+            /*for jQuery testing at somepoint
+            function getContentAjax(div,url) {
+                AJS.$.ajax({
+                    url: url,
+                    data: {format: 'json'},
+                    method: 'get',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true
+                }).done(function(json) {  console.info(json);
+                    document.getElementById(div).innerHTML = this.responseText;
+                });
+            }*/
+        </script>
+    </head>
+    <body>
+        <h1>Web content sharing tests</h1>
+        <p>The tests below test the sharing of content across the ecmwf subdomain origins (e.g. www, confluence, and apps).</p>
+        <p>To test how it works with login you must thoroughly kill all previous *.ecmwf.int auth sessions, then log in on just one of the subdomains (DO NOT visit any other subdomains!) and test the version of this page on that subdomain.</p>
+        <ul>
+            <li><a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/kiden/html/master/test-ecmwf-ajax">External site (should help with gather.town)</a></li>
+            <li><a href="https://sites.ecmwf.int/intranet/data/tests/test-content-sharing-ajax.html">Sites</a></li>
+            <li><a href="">www (tbc)</a></li>
+            <li><a href="">stage (tbc)</a></li>
+            <li><a href="">apps (tbc)</a></li>
+            <li><a href="">apps test (tbc)</a></li>
+            <li><a href="">api test (tbc)</a></li>
+            <li><a href="">confluence (tbc)</a></li>
+            <li><a href="">confluence test (tbc)</a></li>
+        </ul>
+        <p>Now repeat the tests after establshing a session on all the subdomains.</p>
+        <p>Then repeat all of those tests across the major browsers our users use - see  (opens in new window)</p>
+        <h1>Ajax requests to content hosted on other servers</h1>
+        <table>
+            <tr>
+                <td>
+                    <p><strong><a href="https://api.ecmwf.int/v1/key/?format=json">🔒 get API key</a></strong></p>
+                    <div class="iframe" id="apitoken"></div>
+                    <script>getContent('apitoken','https://api.ecmwf.int/v1/key/?format=json');</script>
+                </td>
+                <td>
+                    <p><strong><a href="https://api.ecmwf.int/v1/services/meteogram/requests/">🔒 post API Meteogram</a>(depends on get API key success)</strong></p>
+                    <div class="iframe" id="apimeteograms"></div>
+                    <script>postContent('apimeteograms','https://api.ecmwf.int/v1/services/meteogram/requests/');</script>
+                </td>
+                <td>
+                    <p><strong><a href=" https://www.ecmwf.int/ecmwf_status/status">get WWW service status</a></strong></p>
+                    <div class="iframe" id="sessions"></div>
+                    <script>getContent('sessions',' https://www.ecmwf.int/ecmwf_status/status');</script>
+                </td>
+                <td>
+                    <p><strong><a href="https://sites.ecmwf.int/intranet/data/exchange.json">🔒 get Sites json</a></strong></p>
+                    <div class="iframe" id="siteslists"></div>
+                    <script>getContent('siteslists','https://sites.ecmwf.int/intranet/data/exchange.json');</script>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p><strong><a href="https://confluence.ecmwf.int/rest/api/content/search?cql=parent=45748339&maxResults=5">🔒 get Conflence API</a></strong></p>
+                    <div class="iframe" id="confluenceapi"></div>
+                    <script>getContent('confluenceapi','https://confluence.ecmwf.int/rest/api/content/search?cql=parent=45748339&maxResults=5');</script>
+                </td>
+                <td>
+                    <p><strong><a href="https://jira.ecmwf.int/rest/api/2/search?jql=project%20IN%20(SD,CUS,DSC)&maxResults=5">🔒 get Jira API</a></strong></p>
+                    <div class="iframe" id="jiraapi"></div>
+                    <script>getContent('jiraapi','https://jira.ecmwf.int/rest/api/2/search?jql=project%20IN%20(SD,CUS,DSC)&maxResults=5');</script>
+                </td>
+                <td>
+                    <p><strong><a href="https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/">get Apps Charts</a></strong></p>
+                    <div class="iframe" id="appscharts"></div>
+                    <script>getContent('appscharts','https://apps.ecmwf.int/webapps/opencharts-api/v1/packages/opencharts/products/');</script>
+                </td>
+                <td>
+                    <p><strong><a href="">tbc</a></strong></p>
+                    <div class="iframe" id=""></div>
+                    <script></script>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
