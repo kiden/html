@@ -1,18 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <style>
             table {
                 wdith: 100%;
             }
-            iframe {
+            iframe, div.iframe {
                 width: 23vw;
                 height: 13vw;
+            }
+            div.iframe {
+                background-color: #f1f1f1;
+                /*padding-top: 45%;*/
+                text-align: center;
             }
         </style>
     </head>
     <body>
         <h1>Web content sharing tests</h1>
-        <p>The tests below test the sharing of content across the ecmwf subdomain origins (e.g. www, confluence, and apps).</p>
+        <p>The tests below test the sharing of content across the ecmwf subdomain origins (e.g. www, confluence, and apps) - remember to interact with the content in the iFrame when testing.</p>
         <p>To test how it works with login you must thoroughly kill all previous *.ecmwf.int auth sessions, then log in on just one of the subdomains (DO NOT visit any other subdomains!) and test the version of this page on that subdomain.</p>
         <ul>
             <li><a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/kiden/html/master/test-ecmwf-iframes">External site (should help with gather.town)</a></li>
@@ -32,76 +38,44 @@
         <table>
             <tr>
                 <td>
-                    <p><strong><a href="https://confluence-test.ecmwf.int/display/FUG/">Confluence TEST iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://confluence-test.ecmwf.int/display/FUG/"></iframe></div>
-                </td>
-                <td>
                     <p><strong><a href="https://confluence.ecmwf.int/display/FUF/">Confluence LIVE iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://confluence.ecmwf.int/display/FUF/"></iframe></div>
+                    <iframe src="https://confluence.ecmwf.int/display/FUF/"></iframe>
                 </td>
                 <td>
                     <p><strong><a href="https://www.ecmwf.int/en/publications">www iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://www.ecmwf.int/en/publications"></iframe></div>
+                    <iframe src="https://www.ecmwf.int/en/publications"></iframe>
                 </td>
                 <td>
                     <p><strong><a href="https://apps.ecmwf.int/datasets">apps iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://apps.ecmwf.int/datasets"></iframe></div>
+                    <iframe src="https://apps.ecmwf.int/datasets"></iframe>
+                </td>
+                <td>
+                    <p><strong><a href="https://api.ecmwf.int/v1/key/">api iFrame</a></strong></p>
+                    <div class="iframe">Not applicable</div>
                 </td>
             </tr>
         </table>
         <h2>🔒 Access protected pages</h2>
         <table>
             <tr>
-                <td>
-                    <p><strong><a href="https://confluence-test.ecmwf.int/display/INTRA/">🔒 Confluence TEST iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://confluence-test.ecmwf.int/display/INTRA/"></iframe></div>
-                </td>
+
                 <td>
                     <p><strong><a href="https://confluence.ecmwf.int/display/INTRA/">🔒 Confluence LIVE iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://confluence.ecmwf.int/display/INTRA/"></iframe></div>
+                    <iframe src="https://confluence.ecmwf.int/display/INTRA/"></iframe>
                 </td>
                 <td>
                     <p><strong><a href="https://www.ecmwf.int/en/about/who-we-are/governance/council/100">🔒 www iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://www.ecmwf.int/en/about/who-we-are/governance/council/100"></iframe></div>
+                    <iframe src="https://www.ecmwf.int/en/about/who-we-are/governance/council/100"></iframe>
                 </td>
                 <td>
                     <p><strong><a href="https://apps.ecmwf.int/mars-catalogue">🔒 apps iFrame</a></strong></p>
-                    <div class="stretchy-wrapper"><iframe src="https://apps.ecmwf.int/mars-catalogue"></iframe></div>
+                    <iframe src="https://apps.ecmwf.int/mars-catalogue"></iframe>
+                </td>
+                <td>
+                    <p><strong><a href="https://api.ecmwf.int/v1/key/">🔒 Confluence TEST iFrame</a></strong></p>
+                    <iframe src="https://api.ecmwf.int/v1/key/"></iframe>
                 </td>
             </tr>
         </table>
-        <h1>Ajax requests</h1>
-        <div>
-            <script>
-                getContentXML('apps','https://api.ecmwf.int/v1/key/');
-                getContentAjax('apps2','https://api.ecmwf.int/v1/key/');
-                
-                function getContentXML(div,url) {
-                    const xhttp = new XMLHttpRequest();
-                    xhttp.onload = function() {
-                        document.getElementById(div).innerHTML = this.responseText;
-                    }
-                    xhttp.open("GET", url, true);
-                    xhttp.withCredentials = true;
-                    xhttp.send();
-                }
-                
-                function getContentAjax(div,url) {
-                    AJS.$.ajax({
-                        url: url,
-                        data: {format: 'json'},
-                        method: 'get',
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        crossDomain: true
-                    }).done(function(json) {  console.info(response);
-                        document.getElementById(div).innerHTML = this.responseText;
-                    });
-                }
-            </script>
-            <div id="apps"></div>
-            <div id="apps2"></div>
-        </div>
     </body>
 </html>
