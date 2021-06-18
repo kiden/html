@@ -17,47 +17,62 @@
             }
         </style>
         <script>
+
+
+
             function getContent(div,url) {
-                const xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
-                    document.getElementById(div).innerHTML = this.responseText;
+                /*const xhr = new XMLHttpRequest();
+                xhr.onload = function() { //console.info(xhr);
+                    if(xhr.status===200) {
+                        document.getElementById(div).innerHTML = this.responseText;
+                    } else {
+                        document.getElementById(div).innerHTML = xhr.statusText;
+                    }
+                };
+                xhr.onerror = function(err) {
+                    document.getElementById(div).innerHTML = xhr.status;
                 }
-                xhttp.open("GET", url, true);
-                xhttp.withCredentials = true;
-                xhttp.send();
+
+                xhr.open("GET", url, true);
+                xhr.withCredentials = true;
+                xhr.send();*/
+                
+                
+                fetch(url, {
+                    credentials: 'include'
+                })
+                .then(function(response) {
+                    return response.text();  //promise returns text
+                })
+                .then(function(text) {
+                    document.getElementById(div).innerHTML = text;
+                })
+                .catch(function(error) {
+                    document.getElementById(div).innerHTML = error;
+                });
+                
             }
             function postContent(div,url) {
                 
                 //var authorizationBasic = window.btoa(user + ':' + pass);
                 
-                var request = new XMLHttpRequest();
-                request.open('POST', url, true);
-                //request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-                //request.setRequestHeader('Accept', 'application/json');
-                //request.setRequestHeader('Authorization', 'Basic ' + authorizationBasic);
-                //request.send('token=' + token);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', url, true);
+                //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                //xhr.setRequestHeader('Accept', 'application/json');
+                //xhr.setRequestHeader('Authorization', 'Basic ' + authorizationBasic);
+                //xhr.send('token=' + token);
                 
-                request.onreadystatechange = function () {
-                    if (request.readyState === 4) {
+                xhr.onreadystatechange = function () {
+                    if(xhr.status===200) {
                         document.getElementById(div).innerHTML = this.responseText;
+                    } else {
+                        document.getElementById(div).innerHTML = this.statusText;
                     }
-                };                    
-                
+
+                };
+
             }
-            /*for jQuery testing at somepoint
-            function getContentAjax(div,url) {
-                AJS.$.ajax({
-                    url: url,
-                    data: {format: 'json'},
-                    method: 'get',
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    crossDomain: true
-                }).done(function(json) {  console.info(json);
-                    document.getElementById(div).innerHTML = this.responseText;
-                });
-            }*/
         </script>
     </head>
     <body>
@@ -73,7 +88,7 @@
         </ul>
         <p>Now repeat the tests after establshing a session on all the subdomains.</p>
         <p>Then repeat all of those tests across the major browsers our users use - see  (opens in new window)</p>
-        <h1>Ajax requests to content hosted on other servers</h1>
+        <h1>Ajax requests (with credentials) to content hosted on other servers</h1>
         <table>
             <tr>
                 <td>
@@ -82,7 +97,7 @@
                     <script>getContent('apitoken','https://api.ecmwf.int/v1/key/?format=json');</script>
                 </td>
                 <td>
-                    <p><strong><a href="https://api.ecmwf.int/v1/services/meteogram/requests/">🔒 post API Meteogram</a>(depends on get API key success)</strong></p>
+                    <p><strong><a href="https://api.ecmwf.int/v1/services/meteogram/requests/">🔒 post API Meteogram</a>(depends on API key)</strong></p>
                     <div class="iframe" id="apimeteograms"></div>
                     <script>postContent('apimeteograms','https://api.ecmwf.int/v1/services/meteogram/requests/');</script>
                 </td>
@@ -120,5 +135,6 @@
                 </td>
             </tr>
         </table>
+        <div id="logs"></div>
     </body>
 </html>
